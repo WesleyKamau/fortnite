@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Fortnite Stats</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @font-face {
+            font-family: 'Fortnite';
+            src: url('Fortnite.ttf');
+        }
+
+        h1 {
+            font-size: 40px;
+        }
+
+        h1, h2, button {
+            font-family: Fortnite;
+            color: black;
+            text-align: center;
+        }
+
+        body {
+            background-image: url("https://i.redd.it/fx88qqgw90d41.png");
+            background-size: cover;
+            background-attachment: fixed;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .content {
+            margin: 20px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        input {
+            font-size: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .button-container {
+            text-align: center;
+        }
+
+        button {
+            font-size: 20px;
+            padding: 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            width: 80%;
+        }
+        
+        input[type=submit]{
+            text-align: center;
+            font-family: Fortnite;
+        }
+
+        h2 {
+            font-size: 50px;
+            display: none;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            padding: 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 10px; /* Rounded edges */
+            cursor: pointer;
+            margin-top: 10px;
+            width: 80%;
+            box-sizing: border-box;
+            overflow-wrap: break-word;
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                transform: scale(0.1);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="content" id="contentDiv">
+        <h1 id="title">Enter your username:</h1>
+        <form id="userInfoForm" onsubmit="generateLink(); return false;">
+            <input type="text" id="usernameInput" placeholder="Username" required>
+            <br>
+            <div class="button-container">
+                <button id="epic" type="button" class="account-button" onclick="selectAccountType('epic')">Epic</button>
+                <button id="xbl" type="button" class="account-button" onclick="selectAccountType('xbl')">Xbox</button>
+                <button id="psn" type="button" class="account-button" onclick="selectAccountType('psn')">Playstation</button>
+            </div>
+            <br>
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+    <h2 id="generatedLink" onclick="openLink()"></h2>
+
+    <script>
+        let selectedAccountType = null;
+
+        function selectAccountType(accountType) {
+            selectedAccountType = accountType;
+
+            // Reset all button colors
+            document.querySelectorAll('.account-button').forEach(button => {
+                button.style.backgroundColor = '#3498db';
+            });
+
+            // Set the selected button color
+            document.getElementById(selectedAccountType).style.backgroundColor = 'black';
+        }
+
+        function generateLink() {
+            const username = document.getElementById('usernameInput').value;
+            const link = `http://127.0.0.1:3002/index.html?username=${encodeURIComponent(username)}&accountType=${selectedAccountType}`;
+
+            // Fade out the content div
+            const contentDiv = document.getElementById('contentDiv');
+            contentDiv.style.animation = 'fadeOut 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0s both';
+
+            // Wait for the full fade-out animation to complete
+            setTimeout(() => {
+                // Set the generated link text and fade it in from the center
+                const generatedLink = document.getElementById('generatedLink');
+                generatedLink.textContent = `Generated Link: ${link}`;
+                generatedLink.style.display = 'block';
+                generatedLink.style.animation = 'fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0s both';
+            }, 500);
+        }
+
+
+        function openLink() {
+            const generatedLink = document.getElementById('generatedLink').innerText.split(' ')[2];
+            window.location.href = generatedLink;
+        }
+
+
+    </script>
+</body>
+</html>
