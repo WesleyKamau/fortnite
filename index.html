@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Fortnite Stats</title>
+    <style>
+        @font-face {
+            font-family: 'Fortnite';
+            src: url('Fortnite.ttf');
+        }
+
+        h1 {
+            font-size: 100px;
+            animation: fadeInUpH1 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0s both; /* staggered animation for h1 */
+        }
+
+        h2 {
+            font-size: 250px;
+            animation: fadeInUpH2 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0.5s both; /* staggered animation for h2 with a 0.5s delay */
+        }
+
+        h1, h2 {
+            font-family: Fortnite;
+            color: black;
+            text-align: center;
+        }
+
+        body {
+            background-image: url("https://i.redd.it/fx88qqgw90d41.png");
+            background-size: cover;
+            background-attachment: fixed;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        div {
+            margin-left: 20px;
+        }
+
+        @keyframes fadeInUpH1 {
+            from {
+                transform: scale(0.1);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInUpH2 {
+            from {
+                transform: scale(0.1);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1 id="title"></h1>
+        <h2 id="wins"></h2>
+    </div>
+
+    <script>
+        const outputElement = document.getElementById('wins');
+        const titleElement = document.getElementById('title');
+
+        // Extract username from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const username = urlParams.get('username') || "haile3ykuh1";
+        const accountType = urlParams.get('accountType') || "epic";
+
+        var key = "0e8e852e-e996-4bde-9e58-120937cbabf3";
+        var url = "https://fortnite-api.com/v2/stats/br/v2?name=" + username+"&accountType="+accountType;
+
+        result = httpGet(url, key);
+        const wins = JSON.parse(result).data.stats.all.overall.wins;
+        outputElement.textContent = wins !== undefined ? wins : "User not found";
+
+        titleElement.textContent = username + "'s Fortnite Wins:";
+
+        function httpGet(url, key) {
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.open("GET", url, false);
+            xmlHttp.setRequestHeader("Authorization", key);
+            xmlHttp.send(null);
+            return xmlHttp.responseText;
+        }
+    </script>
+</body>
+</html>
