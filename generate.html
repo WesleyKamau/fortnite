@@ -190,6 +190,10 @@
             });
         }
 
+        if (localStorage.getItem != null) {
+            contentDiv.style.opacity = 1;
+        }
+
         let selectedAccountType = "epic";
 
         function selectAccountType(accountType) {
@@ -216,6 +220,7 @@
                 // Fade out the content div
                 const contentDiv = document.getElementById('contentDiv');
                 contentDiv.style.animation = 'fadeOut 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0s both';
+                localStorage.setItem("loaded", true);
 
                 // Wait for the full fade-out animation to complete
                 setTimeout(() => {
