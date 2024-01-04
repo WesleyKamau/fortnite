@@ -211,7 +211,7 @@
             if (JSONstatus.status != 200) {
                 document.getElementById('error-message').innerText = "Error. "+JSONstatus.error; // Add this line
             } else {
-                const link = `http://127.0.0.1:3000/?username=${username}&accountType=${selectedAccountType}`;
+                const link = `https://wesleykamau.github.io/fortniteStats?username=${username}&accountType=${selectedAccountType}`;
 
                 // Fade out the content div
                 const contentDiv = document.getElementById('contentDiv');
