@@ -8,7 +8,13 @@
             src: url('Fortnite.ttf');
         }
 
+        @font-face {
+            font-family: 'Fortnite2';
+            src: url('Burbank Big Condensed Black.otf');
+        }
+
         h1 {
+            font-family:Fortnite2;
             font-size: 100px;
             animation: fadeInUpH1 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0s both; /* staggered animation for h1 */
         }
@@ -16,10 +22,11 @@
         h2 {
             font-size: 350px;
             animation: fadeInUpH2 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0.5s both; /* staggered animation for h2 with a 0.5s delay */
+            font-family: Fortnite2;
         }
 
         h1, h2 {
-            font-family: Fortnite;
+            
             color: black;
             text-align: center;;
         }
