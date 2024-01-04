@@ -35,6 +35,46 @@
             margin: 20px;
             padding: 20px;
             box-sizing: border-box;
+            opacity: 0;
+            position: relative;
+        }
+
+        #loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            z-index: 1000;
+            opacity: 1;
+            transition: opacity 0.5s ease-out;
+        }
+
+        #loading.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #loading-spinner {
+            border: 8px solid #007bff;
+            border-top: 8px solid transparent;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         input {
@@ -62,7 +102,7 @@
             margin: 5px;
             width: 80%;
         }
-        
+
         input[type=submit]{
             text-align: center;
             font-family: Fortnite;
@@ -77,7 +117,7 @@
             background-color: #3498db;
             color: white;
             border: none;
-            border-radius: 10px; /* Rounded edges */
+            border-radius: 10px;
             cursor: pointer;
             margin-top: 10px;
             width: 80%;
@@ -104,11 +144,27 @@
                 opacity: 1;
             }
         }
+
+        /* New keyframes for fade in */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 <body>
+
+    <div id="loading">
+        <div id="loading-spinner"></div>
+    </div>
+
     <div class="content" id="contentDiv">
-        <h1 id="title">Enter your username:</h1>
+        <div class="loading-spinner"></div>
+        <h1 id="title">Enter your Fortnite username:</h1>
         <form id="userInfoForm" onsubmit="generateLink(); return false;">
             <input type="text" id="usernameInput" placeholder="Username" required>
             <br>
@@ -124,6 +180,16 @@
     <h2 id="generatedLink" onclick="openLink()"></h2>
 
     <script>
+        if ('fonts' in document) {
+            document.fonts.load('1em "Fortnite"').then(() => {
+                // Font is loaded, apply the fade-in animation to the content div
+                const contentDiv = document.getElementById('contentDiv');
+                contentDiv.style.animation = 'fadeIn 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0s both';
+                // Remove the loading spinner
+                document.getElementById('loading').classList.add('hidden')
+            });
+        }
+
         let selectedAccountType = null;
 
         function selectAccountType(accountType) {
@@ -140,7 +206,7 @@
 
         function generateLink() {
             const username = document.getElementById('usernameInput').value;
-            const link = `https://wesleykamau.github.io/fortniteStats/?username=${encodeURIComponent(username)}&accountType=${selectedAccountType}`;
+            const link = `http://127.0.0.1:3002/index.html?username=${username}&accountType=${selectedAccountType}`;
 
             // Fade out the content div
             const contentDiv = document.getElementById('contentDiv');
@@ -153,16 +219,13 @@
                 generatedLink.textContent = `Generated Link: ${link}`;
                 generatedLink.style.display = 'block';
                 generatedLink.style.animation = 'fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0s both';
-            }, 500);
+            }, 600); // Adjusted timing to match fadeInUp animation
         }
-
 
         function openLink() {
             const generatedLink = document.getElementById('generatedLink').innerText.split(' ')[2];
             window.location.href = generatedLink;
         }
-
-
     </script>
 </body>
 </html>
