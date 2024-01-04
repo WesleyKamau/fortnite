@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Fortnite Stats</title>
+    <title>Fortnite Win Page Generator</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         @font-face {
@@ -164,9 +164,9 @@
 
     <div class="content" id="contentDiv">
         <div class="loading-spinner"></div>
-        <h1 id="title">Enter your Fortnite username:</h1>
+        <h1 id="title">Enter your username:</h1>
         <form id="userInfoForm" onsubmit="generateLink(); return false;">
-            <input type="text" id="usernameInput" placeholder="Username" required>
+            <input type="text" id="usernameInput" placeholder="Fortnite Username" required>
             <br>
             <div class="button-container">
                 <button id="epic" type="button" class="account-button" onclick="selectAccountType('epic')">Epic</button>
@@ -177,7 +177,6 @@
             <input type="submit" value="Submit">
         </form>
     </div>
-    <h2 id="generatedLink" onclick="openLink()"></h2>
 
     <script>
         if ('fonts' in document) {
@@ -190,7 +189,7 @@
             });
         }
 
-        let selectedAccountType = null;
+        let selectedAccountType = "epic";
 
         function selectAccountType(accountType) {
             selectedAccountType = accountType;
@@ -214,11 +213,7 @@
 
             // Wait for the full fade-out animation to complete
             setTimeout(() => {
-                // Set the generated link text and fade it in from the center
-                const generatedLink = document.getElementById('generatedLink');
-                generatedLink.textContent = `Generated Link: ${link}`;
-                generatedLink.style.display = 'block';
-                generatedLink.style.animation = 'fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0s both';
+                window.location.href = link;
             }, 600); // Adjusted timing to match fadeInUp animation
         }
 

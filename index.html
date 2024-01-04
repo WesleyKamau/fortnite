@@ -5,7 +5,7 @@
     <style>
         @font-face {
             font-family: 'Fortnite';
-            src: url('Fortnite.ttf');
+            src: url('Burbank Big Condensed Black.otf');
         }
 
         h1 {
@@ -22,6 +22,7 @@
             font-family: Fortnite;
             color: black;
             text-align: center;
+            transform: scaleX(11.5);
         }
 
         body {
@@ -52,7 +53,7 @@
 
         @keyframes fadeInUpH2 {
             from {
-                transform: scale(0.1);
+                transform: scale(0) scaleY(1.5);
                 opacity: 0;
             }
             to {
@@ -85,6 +86,10 @@
         outputElement.textContent = wins !== undefined ? wins : "User not found";
 
         titleElement.textContent = username + "'s Fortnite Wins:";
+
+        if( outputElement.textContent !== undefined) {
+            document.title = username+"'s Fortnite Wins";
+        }
 
         function httpGet(url, key) {
             var xmlHttp = new XMLHttpRequest();
