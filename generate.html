@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Fortnite Win Page Generator</title>
+    <title>Fortnite Win Generator</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         @font-face {
@@ -13,7 +13,7 @@
             font-size: 40px;
         }
 
-        h1, h2, button {
+        h1, h2, button, #error-message {
             font-family: Fortnite;
             color: black;
             text-align: center;
@@ -167,6 +167,7 @@
         <h1 id="title">Enter your username:</h1>
         <form id="userInfoForm" onsubmit="generateLink(); return false;">
             <input type="text" id="usernameInput" placeholder="Fortnite Username" required>
+            <p id="error-message" style="color: red; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-transform:capitalize;"></p> <!-- Add this line -->
             <br>
             <div class="button-container">
                 <button id="epic" type="button" class="account-button" onclick="selectAccountType('epic')">Epic</button>
@@ -205,21 +206,41 @@
 
         function generateLink() {
             const username = document.getElementById('usernameInput').value;
-            const link = `https://wesleykamau.github.io/fortniteStats?username=${username}&accountType=${selectedAccountType}`;
+            JSONstatus = getStatus(username, selectedAccountType);
 
-            // Fade out the content div
-            const contentDiv = document.getElementById('contentDiv');
-            contentDiv.style.animation = 'fadeOut 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0s both';
+            if (JSONstatus.status != 200) {
+                document.getElementById('error-message').innerText = "Error. "+JSONstatus.error; // Add this line
+            } else {
+                const link = `http://127.0.0.1:3000/?username=${username}&accountType=${selectedAccountType}`;
 
-            // Wait for the full fade-out animation to complete
-            setTimeout(() => {
-                window.location.href = link;
-            }, 600); // Adjusted timing to match fadeInUp animation
+                // Fade out the content div
+                const contentDiv = document.getElementById('contentDiv');
+                contentDiv.style.animation = 'fadeOut 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0s both';
+
+                // Wait for the full fade-out animation to complete
+                setTimeout(() => {
+                    window.location.href = link;
+                }, 600); // Adjusted timing to match fadeInUp animation
+            }
         }
 
-        function openLink() {
-            const generatedLink = document.getElementById('generatedLink').innerText.split(' ')[2];
-            window.location.href = generatedLink;
+        function getStatus(username, accountType) {
+            var key = "0e8e852e-e996-4bde-9e58-120937cbabf3";
+            var url = "https://fortnite-api.com/v2/stats/br/v2?name=" + username+"&accountType="+accountType;
+
+            result = httpGet(url, key);
+            console.log(result);
+            const JSONresult = JSON.parse(result);
+
+            return JSONresult;
+        }
+
+        function httpGet(url, key) {
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.open("GET", url, false);
+            xmlHttp.setRequestHeader("Authorization", key);
+            xmlHttp.send(null);
+            return xmlHttp.responseText;
         }
     </script>
 </body>
