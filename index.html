@@ -1,21 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Fortnite Stats</title>
+    <title>Check your Fortnite Stats</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        @font-face {
+            font-family: 'Fortnite';
+            src: url('Fortnite.ttf');
+        }
 
         h1 {
-            font-size: 10vw;
-            animation: fadeInUpH1 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0s both; /* staggered animation for h1 */
+            font-size: 40px;
         }
 
-        h2 {
-            font-size: 15vw;
-            animation: fadeInUpH2 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0.5s both; /* staggered animation for h2 with a 0.5s delay */
-        }
-
-        h1, h2 {
-            font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        h1, h2, button, #error-message {
+            font-family: Fortnite;
             color: black;
             text-align: center;
         }
@@ -24,78 +23,222 @@
             background-image: url("https://i.redd.it/fx88qqgw90d41.png");
             background-size: cover;
             background-attachment: fixed;
-            display: flex; /* Change this from grid to flex */
-            flex-direction: column; /* Add this line */
-            justify-content: center; /* This will center the div vertically */
-            align-items: center; /* This will center the div horizontally */
             margin: 0;
             height: 100vh;
-            width: 100vw;
-        }
-
-        div {
-            width: 100vw;
-            height: 100vh;
-            box-sizing: border-box;
-            overflow: hidden;
-            display: flex; /* Add this line */
-            justify-content: center; /* Add this line */
-            align-items: center;
+            display: flex;
             flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
+        .content {
+            margin: 20px;
+            padding: 20px;
+            box-sizing: border-box;
+            opacity: 0;
+            position: relative;
+        }
 
+        #loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            z-index: 1000;
+            opacity: 1;
+            transition: opacity 0.5s ease-out;
+        }
 
+        #loading.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
 
-        @keyframes fadeInUpH1 {
+        #loading-spinner {
+            border: 8px solid #007bff;
+            border-top: 8px solid transparent;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        input {
+            font-size: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .button-container {
+            text-align: center;
+        }
+
+        button {
+            font-size: 20px;
+            padding: 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            width: 80%;
+        }
+
+        input[type=submit]{
+            text-align: center;
+            font-family: Fortnite;
+        }
+
+        h2 {
+            font-size: 50px;
+            display: none;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            padding: 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 80%;
+            box-sizing: border-box;
+            overflow-wrap: break-word;
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeInUp {
             from {
                 transform: scale(0.1);
                 opacity: 0;
             }
             to {
-                transform: none;
-                opacity: none;
+                transform: scale(1);
+                opacity: 1;
             }
         }
 
-        @keyframes fadeInUpH2 {
+        /* New keyframes for fade in */
+        @keyframes fadeIn {
             from {
-                transform: scale(0) scaleY(1.5);
                 opacity: 0;
             }
             to {
-                transform: none;
-                opacity: none;
+                opacity: 1;
             }
         }
     </style>
 </head>
 <body>
-    <div>
-        <h1 id="title">Error. Maybe there's a typo or <a href="https://www.epicgames.com/help/en-US/fortnite-c5719335176219/accounts-c19319138499099/how-to-enable-or-disable-public-match-statistics-for-fortnite-tracker-etc-a15722231018651">your account is private</a>.</h1>
-        <h2 id="wins"></h2>
+
+    <div id="loading">
+        <div id="loading-spinner"></div>
+    </div>
+
+    <div class="content" id="contentDiv">
+        <div class="loading-spinner"></div>
+        <h1 id="title">Enter your username:</h1>
+        <form id="userInfoForm" onsubmit="generateLink(); return false;">
+            <input type="text" id="usernameInput" placeholder="Fortnite Username" required>
+            <p id="error-message" style="color: red; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-transform:capitalize;"></p> <!-- Add this line -->
+            <br>
+            <div class="button-container">
+                <button id="epic" type="button" class="account-button" onclick="selectAccountType('epic')">Epic</button>
+                <button id="xbl" type="button" class="account-button" onclick="selectAccountType('xbl')">Xbox</button>
+                <button id="psn" type="button" class="account-button" onclick="selectAccountType('psn')">Playstation</button>
+            </div>
+            <br>
+            <input type="submit" value="Submit">
+        </form>
     </div>
 
     <script>
-        const outputElement = document.getElementById('wins');
-        const titleElement = document.getElementById('title');
+        if ('fonts' in document) {
+            document.fonts.load('1em "Fortnite"').then(() => {
+                // Font is loaded, apply the fade-in animation to the content div
+                const contentDiv = document.getElementById('contentDiv');
+                contentDiv.style.animation = 'fadeIn 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0s both';
+                // Remove the loading spinner
+                document.getElementById('loading').classList.add('hidden')
+            });
+        }
 
-        // Extract username from URL parameters
-        const urlParams = new URLSearchParams(window.location.search);
-        const username = urlParams.get('username') || "haile3ykuh1";
-        const accountType = urlParams.get('accountType') || "epic";
+        window.addEventListener('pageshow', function(event) {
+            const contentDiv = document.getElementById('contentDiv');
+            contentDiv.style.opacity = 1;
+            contentDiv.style.animation = 'none'; // This line stops the animation
+        });
 
-        var key = "0e8e852e-e996-4bde-9e58-120937cbabf3";
-        var url = "https://fortnite-api.com/v2/stats/br/v2?name=" + username+"&accountType="+accountType;
+        let selectedAccountType = "epic";
 
-        result = httpGet(url, key);
-        const wins = JSON.parse(result).data.stats.all.overall.wins;
-        outputElement.textContent = wins !== undefined ? wins : "User not found";
+        function selectAccountType(accountType) {
+            selectedAccountType = accountType;
 
-        titleElement.textContent = username + "'s Fortnite Wins:";
+            // Reset all button colors
+            document.querySelectorAll('.account-button').forEach(button => {
+                button.style.backgroundColor = '#3498db';
+            });
 
-        if( outputElement.textContent !== undefined) {
-            document.title = username+"'s Fortnite Wins";
+            // Set the selected button color
+            document.getElementById(selectedAccountType).style.backgroundColor = 'black';
+        }
+
+        function generateLink() {
+            const username = document.getElementById('usernameInput').value;
+            JSONstatus = getStatus(username, selectedAccountType);
+
+            if (JSONstatus.status != 200) {
+                document.getElementById('error-message').innerText = "Error. "+JSONstatus.error; // Add this line
+            } else {
+                const link = `https://wesleykamau.github.io/fortniteStats/user?username=${username}&accountType=${selectedAccountType}`;
+
+                // Fade out the content div
+                const contentDiv = document.getElementById('contentDiv');
+                contentDiv.style.animation = 'fadeOut 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0s both';
+
+                // Wait for the full fade-out animation to complete
+                setTimeout(() => {
+                    window.location.href = link;
+                }, 600); // Adjusted timing to match fadeInUp animation
+            }
+        }
+
+        function getStatus(username, accountType) {
+            var key = "0e8e852e-e996-4bde-9e58-120937cbabf3";
+            var url = "https://fortnite-api.com/v2/stats/br/v2?name=" + username+"&accountType="+accountType;
+
+            result = httpGet(url, key);
+            console.log(result);
+            const JSONresult = JSON.parse(result);
+
+            return JSONresult;
         }
 
         function httpGet(url, key) {
@@ -105,7 +248,6 @@
             xmlHttp.send(null);
             return xmlHttp.responseText;
         }
-
     </script>
 </body>
 </html>
