@@ -5,8 +5,9 @@
     <style>
 
         h1 {
-            font-size: 10vw;
+            font-size: 5vw;
             animation: fadeInUpH1 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0s both; /* staggered animation for h1 */
+            margin: 5px;
         }
 
         h2 {
@@ -42,6 +43,7 @@
             justify-content: center; /* Add this line */
             align-items: center;
             flex-direction: column;
+            
         }
 
 
@@ -85,10 +87,14 @@
         const username = urlParams.get('username') || "haile3ykuh1";
         const accountType = urlParams.get('accountType') || "epic";
 
-        var key = "0e8e852e-e996-4bde-9e58-120937cbabf3";
+        var key = "8e14a0a7-1e53-49e5-9cd7-dcc1a7ddbeb2";
         var url = "https://fortnite-api.com/v2/stats/br/v2?name=" + username+"&accountType="+accountType;
 
+
+        console.log(url,key)
         result = httpGet(url, key);
+
+        console.log(result)
         const wins = JSON.parse(result).data.stats.all.overall.wins;
         outputElement.textContent = wins !== undefined ? wins : "User not found";
 

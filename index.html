@@ -217,7 +217,7 @@
             if (JSONstatus.status != 200) {
                 document.getElementById('error-message').innerText = "Error. "+JSONstatus.error; // Add this line
             } else {
-                const link = `https://wesleykamau.github.io/fortniteStats/user?username=${username}&accountType=${selectedAccountType}`;
+                const link = `https://wesleykamau.com/fortnite/user?username=${username}&accountType=${selectedAccountType}`;
 
                 // Fade out the content div
                 const contentDiv = document.getElementById('contentDiv');
@@ -231,12 +231,14 @@
         }
 
         function getStatus(username, accountType) {
-            var key = "0e8e852e-e996-4bde-9e58-120937cbabf3";
+            var key = "8e14a0a7-1e53-49e5-9cd7-dcc1a7ddbeb2";
             var url = "https://fortnite-api.com/v2/stats/br/v2?name=" + username+"&accountType="+accountType;
 
             result = httpGet(url, key);
-            console.log(result);
+            console.log(key);
             const JSONresult = JSON.parse(result);
+
+            console.log(JSONresult);
 
             return JSONresult;
         }
